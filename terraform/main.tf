@@ -172,13 +172,19 @@ resource "aws_instance" "bastion" {
   tags = { Name = "AI-Bastion-Host" }
 }
 
-# 5. GPU Instance
+# 5. CPU Instance (LightGBM fallback — no GPU required)
 data "aws_ami" "deep_learning" {
   most_recent = true
   owners      = ["amazon"]
+
   filter {
     name   = "name"
-    values = ["Deep Learning Base OSS Nvidia Driver GPU AMI (Ubuntu 22.04)*"]
+    values = ["Deep Learning Base AMI with Single CUDA (Ubuntu 22.04)*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }
 }
 
@@ -206,23 +212,20 @@ resource "aws_iam_instance_profile" "ai_profile" {
 
 resource "aws_instance" "gpu_node" {
   ami                    = data.aws_ami.deep_learning.id
-  instance_type          = "g4dn.xlarge" 
+  instance_type          = "m7i-flex.large"
   subnet_id              = aws_subnet.private[0].id
   vpc_security_group_ids = [aws_security_group.gpu_sg.id]
   key_name               = aws_key_pair.lab_key.key_name
   iam_instance_profile   = aws_iam_instance_profile.ai_profile.name
 
   root_block_device {
-    volume_size = 150 
+    volume_size = 50
     volume_type = "gp3"
   }
 
-  user_data = templatefile("${path.module}/user_data.sh", {
-    hf_token = var.hf_token
-    model_id = var.model_id
-  })
+  user_data = templatefile("${path.module}/user_data.sh", {})
 
-  tags = { Name = "AI-Inference-Node" }
+  tags = { Name = "AI-CPU-LightGBM-Node" }
 }
 
 # 6. Load Balancer

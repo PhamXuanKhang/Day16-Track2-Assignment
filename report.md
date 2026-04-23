@@ -1,0 +1,5 @@
+- Do tài khoản AWS của em mới được kích hoạt, yêu cầu tăng hạn mức cấp phát (quota) cho GPU instance (g4dn.xlarge) chưa được AWS phê duyệt chấp nhận. Vì vậy, em đã đổi sang phương án sử dụng CPU instance (m7i-flex.large) để huấn luyện và triển khai bài thực hành.
+
+- Mặc dù không dùng GPU, kết quả huấn luyện mô hình LightGBM trên bộ dữ liệu Credit Card Fraud Detection vẫn rất ấn tượng: thời gian training (hơn 284 nghìn dòng) chỉ mất 27.11 giây và đạt chỉ số AUC-ROC khá tốt là 0.8638. Ở khía cạnh suy luận (inference), tốc độ xử lý trên CPU chứng minh được sự hiệu quả với độ trễ cho một truy vấn đơn (1-row latency) chỉ 0.333 ms. Khi thực hiện suy luận theo lô 1000 dòng, thời gian xử lý chỉ mất 39.379 ms (đạt thông lượng lên đến ~25,394 dự đoán/giây).
+
+- Nhìn chung, việc sử dụng CPU instance đối với bài toán Machine Learning dạng bảng này hoàn toàn đáp ứng tốt về mặt chi phí cũng như hiệu năng mà không vướng phải rào cản hạn mức (quota) như GPU) về quota của AWS.

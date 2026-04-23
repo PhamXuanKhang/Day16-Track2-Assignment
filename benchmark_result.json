@@ -1,0 +1,14 @@
+{
+  "data_load_time_s": 1.0272,
+  "training_time_s": 27.1139,
+  "best_iteration": 0,
+  "auc_roc": 0.863887,
+  "accuracy": 0.997981,
+  "f1_score": 0.559387,
+  "precision": 0.447853,
+  "recall": 0.744898,
+  "inference_latency_1row_ms": 0.3334,
+  "inference_latency_1000_ms": 39.3796,
+  "instance_type": "m7i-flex.large",
+  "dataset_rows": 284807
+}
